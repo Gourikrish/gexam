@@ -1,0 +1,552 @@
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named is_palindrome(num).
+    It should take an integer and return True if the
+    number is a palindrome, otherwise return False.
+
+    Use string conversion to reverse and compare the number.
+    Return only executable Python code.
+    Do not include explanations or examples.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    # Extract code if Ollama returns a markdown code block
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        is_palindrome = namespace["is_palindrome"]
+
+        test_cases = [
+            (121, True),
+            (123, False),
+            (1331, True),
+            (12321, True),
+            (456, False)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for num, expected in test_cases:
+
+            result = is_palindrome(num)
+
+            print(
+                f"{num} = {result} "
+                f"(Expected: {expected})"
+            )
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
+
+//factorial.py
+
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named factorial(num)
+    that takes a non-negative integer as an argument
+    and returns its factorial.
+
+    Return ONLY the Python function.
+    Do not include explanations or markdown.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        factorial = namespace["factorial"]
+
+        test_cases = [
+            (0, 1),
+            (1, 1),
+            (3, 6),
+            (4, 24),
+            (5, 120)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for num, expected in test_cases:
+
+            result = factorial(num)
+
+            print(f"{num} = {result} (Expected: {expected})")
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
+
+//prime.py
+
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named is_prime(num)
+    that takes an integer as an argument and
+    returns True if the number is prime,
+    otherwise returns False.
+
+    Return ONLY the Python function.
+    Do not include explanations or markdown.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        is_prime = namespace["is_prime"]
+
+        test_cases = [
+            (2, True),
+            (3, True),
+            (4, False),
+            (7, True),
+            (9, False)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for num, expected in test_cases:
+
+            result = is_prime(num)
+
+            print(
+                f"{num} = {result} "
+                f"(Expected: {expected})"
+            )
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
+
+//even_odd.py
+
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named is_even(num)
+    that takes an integer as an argument and
+    returns True if the number is even,
+    otherwise returns False.
+
+    Return ONLY the Python function.
+    Do not include explanations or markdown.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        is_even = namespace["is_even"]
+
+        test_cases = [
+            (2, True),
+            (3, False),
+            (4, True),
+            (7, False),
+            (10, True)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for num, expected in test_cases:
+
+            result = is_even(num)
+
+            print(
+                f"{num} = {result} "
+                f"(Expected: {expected})"
+            )
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
+//count_vowels
+
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named count_vowels(text)
+    that takes a string as an argument and returns
+    the total number of vowels (a, e, i, o, u).
+    The function should be case-insensitive.
+
+    Return ONLY the function definition.
+    Do not include test cases, examples or explanations.
+    Do not include markdown.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    # Extract Python code if markdown is present
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    # Extract only the requested function
+    function_match = re.search(
+        r"def count_vowels\(.*?(?=\ndef |\Z)",
+        generated_code,
+        re.DOTALL
+    )
+
+    if function_match:
+        generated_code = function_match.group(0).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        count_vowels = namespace["count_vowels"]
+
+        test_cases = [
+            ("education", 5),
+            ("hello", 2),
+            ("PYTHON", 1),
+            ("apple", 2),
+            ("sky", 0)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for text, expected in test_cases:
+
+            result = count_vowels(text)
+
+            print(
+                f"{text} = {result} "
+                f"(Expected: {expected})"
+            )
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
+
+
+//model
+ollama run qwen2.5-coder:0.5b
+/bye
+
+//run
+python palindrome.py
+
+
+
+
+
+
+
+//check output
+def is_palindrome(num):
+    return str(num) == str(num)[::-1]
+//factorial
+Write a Python function named factorial that takes an integer
+as an argument and returns its factorial.
+Return ONLY the Python function. Do not include explanations or markdown.
+
+//prime
+Write a Python function named is_prime that takes an integer
+as an argument and returns True if it is prime, otherwise False.
+Return ONLY the Python function. Do not include explanations or markdown.
+
+//is_palindrome
+Write a Python function named is_palindrome that takes an integer
+as an argument and returns True if it is a palindrome, otherwise False.
+Return ONLY the Python function. Do not include explanations or markdown.
+
+//count vowels
+Write a Python function named count_vowels that takes a string
+as an argument and returns the number of vowels in it.
+Return ONLY the Python function. Do not include explanations or markdown.
+
+//sum num
+Write a Python function named sum_even that takes a list of numbers
+as an argument and returns the sum of all even numbers.
+Return ONLY the Python function. Do not include explanations or markdown.

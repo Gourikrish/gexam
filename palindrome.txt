@@ -1,0 +1,86 @@
+import ollama
+import re
+def generate_function():
+
+    prompt="""
+    write a python function named is_palindrome(num).
+    take the integer as argument.
+    return true if the number is palindome,
+    otherwise return false.
+
+    return only the python function
+    do not include explanations or markdown.
+    """
+
+    response=ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+    generated_code=response["response"].strip()
+
+    match=re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+    if match:
+        generated_code=match.group(1).strip()
+    return generated_code
+
+def test_function(code):
+    namespace={}
+
+    try:
+        exec(code, namespace)
+        is_palindrome=namespace["is_palindrome"]
+
+        test_cases=[
+            (121, True),
+            (12221, True),
+            (234, False),
+            (3223, True),
+            (4422, False)
+        ]
+        print("testing generated function code")
+        print("-"*40)
+        passed=0
+
+        for num, expected in test_cases:
+            result=is_palindrome(num)
+
+            print(
+                f"{num}={result}"
+                f"(Expected:{expected})"
+            )
+
+            if result==expected:
+                passed+=1
+                print("pass")
+            else:
+                print("fail")
+
+        print("-"*40)
+        print(f"test case passed:{passed}/{len(test_cases)}")
+
+        if passed==len(test_cases):
+            print("overall result:correct")
+        else:
+            print("overall result:incorrect")
+    except Exception as e:
+        print("Error:", e)
+
+print("generating python function code")
+print("="*40)
+
+generated_code=generate_function()
+
+print("generated python function")
+print("-"*40)
+print(generated_code)
+print("-"*40)
+
+test_function(generated_code)
+
+        
+
+    

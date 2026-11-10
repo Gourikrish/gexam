@@ -1,0 +1,125 @@
+import ollama
+import ast
+import re
+
+# 1. Dataset
+real_code_dataset = [
+
+    """
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
+"""
+
+]
+# 2. Code Generator
+def generate_code():
+    prompt = "Write a Python insertion_sort function. Return only code."
+
+    try:
+        response = ollama.generate(
+            model="codegemma:2b",
+            prompt=prompt,
+            options={"num_predict": 120, "temperature": 0}
+        )
+
+        code = response["response"].replace("```python", "").replace("```", "").strip()
+        match = re.search(r"def insertion_sort\(arr\):[\s\S]*", code)
+
+        if match:
+            code = match.group()
+            ast.parse(code)
+            print("AI code generated")
+            return code
+
+    except Exception as e:
+        print("AI failed:", e)
+
+    print("Using fallback code")
+    return """
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and arr[j] > key:
+            arr[j+1] = arr[j]
+            j -= 1
+        arr[j+1] = key
+    return arr
+"""
+
+# 3. Syntax Check
+def syntax_check(code):
+    try:
+        ast.parse(code)
+        print("Syntax: PASSED")
+        return True
+    except:
+        print("Syntax: FAILED")
+        return False
+
+# 4. Functional Test
+def test_code(code):
+    try:
+        ns = {}
+        exec(code, ns)
+        sort = ns["insertion_sort"]
+
+        if sort([5, 3, 1]) == [1, 3, 5]:
+            print("Functional Test: PASSED")
+            return True
+    except:
+        pass
+
+    print("Functional Test: FAILED")
+    return False
+
+# 5. Algorithm Check
+def algorithm_check(code):
+
+    if ("for" in code and
+        "while" in code and
+        "insertion_sort" in code and
+        "sort(" not in code):
+
+        print("Algorithm: PASSED")
+        return True
+
+    print("Algorithm: FAILED")
+    return False
+
+# 6. Similarity Check
+def similarity_check(code):
+    a = set(re.findall(r"\w+", code.lower()))
+    b = set(re.findall(r"\w+", real_code_dataset[0].lower()))
+    score = len(a & b) / len(a | b) * 100
+    print("Similarity:", round(score, 2), "%")
+    return score
+
+# 7. Discriminator
+def discriminator(code):
+    score = 0
+
+    if syntax_check(code):
+        score += 20
+        if test_code(code):
+            score += 40
+        if algorithm_check(code):
+            score += 20
+        score += similarity_check(code) * 0.20
+
+    print("Final Score:", round(score, 2), "/100")
+    print("RESULT:", "ACCEPTED" if score >= 80 else "REJECTED")
+
+# Main
+print("INSERTION SORT CODE GENERATION")
+code = generate_code()
+print("\nGENERATED CODE:\n", code)
+discriminator(code)
+

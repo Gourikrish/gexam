@@ -1,0 +1,80 @@
+import ollama
+import re
+
+def generate_function():
+
+    prompt = """
+    write a python function named count_vowels(text).
+    take the text as an argument.
+    calculate the total number of vowels in each string and return the total count(a,e,i,o,u).
+    the function should be case_insensitive and should ignore non-alphabetic characters.
+    return only python function.
+    do not include any explanations or markdowns.
+    """
+    response=ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+    generated_code=response["response"].strip()
+
+    match=re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+    if match:
+        generated_code=match.group(1).strip()
+        return generated_code
+    
+def test_function(code):
+    namespace={}
+
+    try:
+        exec(code,namespace)
+        count_vowels=namespace["count_vowels"]
+
+        test_cases=[
+            ("education", 5),
+            ("hello", 2),
+            ("beautiful", 5),
+            ("PYTHON", 1),
+            ("CodIng", 2)
+        ]
+
+        print("testing generated code")
+        print("-"*40)
+        passed=0
+
+        for text, expected in test_cases:
+            result=count_vowels(text)
+
+            print(f"{text}={result} (Expected:{expected})")
+            if result==expected:
+                passed+=1
+                print("pass")
+            else:
+                print("fail")
+
+        print("-"*40)
+        print(f"test caases passed: {passed}/{len(test_cases)}")
+
+        if passed==len(test_cases):
+            print("overall result:correct")
+        else:
+            print("overall result :incorrect")
+
+    except Exception as e:
+        print("error:",e)
+
+print("ollama python function generation")
+print("="*40)
+generated_count=generate_function()
+
+print("\ngenerated python function")
+print("-"*40)
+print(generated_count)
+print("-"*40)
+
+test_function(generated_count)
+
+

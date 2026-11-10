@@ -1,0 +1,22 @@
+python -m pip install ollama
+
+ollama --version
+
+ollama pull qwen2.5-coder:0.5b
+
+ollama list
+
+
+//model
+ollama run qwen2.5-coder:0.5b
+/bye
+
+//run
+python palindrome.py
+
+
+pip install ollama
+ollama list
+ollama pull codegemma:2b
+ollama run codegemma:2b(Generate only Python code for a function named insertion_sort(arr). Use insertion sort to arrange numbers in ascending order. Return the sorted list. No explanation.)/bye
+

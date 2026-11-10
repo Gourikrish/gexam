@@ -1,0 +1,100 @@
+
+import ollama
+import re
+
+# Generate Python function using Ollama
+def generate_function():
+
+    prompt = """
+    Write a Python function named is_even(num)
+    that takes an integer as an argument and
+    returns True if the number is even,
+    otherwise returns False.
+
+    Return ONLY the Python function.
+    Do not include explanations or markdown.
+    """
+
+    response = ollama.generate(
+        model="qwen2.5-coder:0.5b",
+        prompt=prompt
+    )
+
+    generated_code = response["response"].strip()
+
+    # Extract code if markdown is present
+    match = re.search(
+        r"```(?:python)?\s*(.*?)```",
+        generated_code,
+        re.DOTALL
+    )
+
+    if match:
+        generated_code = match.group(1).strip()
+
+    return generated_code
+
+
+# Test the generated function
+def test_function(code):
+
+    namespace = {}
+
+    try:
+        exec(code, namespace)
+
+        is_even = namespace["is_even"]
+
+        test_cases = [
+            (2, True),
+            (3, False),
+            (4, True),
+            (7, False),
+            (10, True)
+        ]
+
+        print("\nTesting Generated Function")
+        print("-" * 40)
+
+        passed = 0
+
+        for num, expected in test_cases:
+
+            result = is_even(num)
+
+            print(
+                f"{num} = {result} "
+                f"(Expected: {expected})"
+            )
+
+            if result == expected:
+                passed += 1
+                print("PASS")
+            else:
+                print("FAIL")
+
+        print("-" * 40)
+        print(f"Test Cases Passed: {passed}/{len(test_cases)}")
+
+        if passed == len(test_cases):
+            print("Overall Result: CORRECT")
+        else:
+            print("Overall Result: INCORRECT")
+
+    except Exception as e:
+        print("Error:", e)
+
+
+# Main program
+print("Ollama Python Function Generator")
+print("=" * 40)
+
+generated_code = generate_function()
+
+print("\nGenerated Python Function:")
+print("-" * 40)
+print(generated_code)
+print("-" * 40)
+
+test_function(generated_code)
+
